@@ -91,7 +91,6 @@ def get_arguments() -> argparse.Namespace:
         type=int,
         help="The resolution of the outputs of the diffusion model",
         default=256,
-        choices=[128, 256, 512],
     )
     parser.add_argument(
         "--clip_models",

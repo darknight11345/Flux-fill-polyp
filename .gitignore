@@ -154,3 +154,24 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Large model weights, checkpoints, and datasets
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+checkpoints/
+outputs/
+data/
+
+# Slurm logs & job scripts output
+*.out
+*.err
+slurm-*.out
+
+# Ignore all .jpg files anywhere in the repository
+*.jpg
+
+# Ignore the sampling_images directory and all its contents
+sampling_images/
