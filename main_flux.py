@@ -14,7 +14,7 @@ if __name__ == "__main__":
         for i in range(args.start_index, args.end_index + 1):
             path = None            
             for filename in os.listdir(os.path.join(base_model_path,f"cluster-{i}")):
-                print(f"the filename is: {filename}")
+                #print(f"the filename is: {filename}")
                 if filename.startswith(f"pytorch_"):
                     path = os.path.join(os.path.join(base_model_path,f"cluster-{i}"), filename)
             
