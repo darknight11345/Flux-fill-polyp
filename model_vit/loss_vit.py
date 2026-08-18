@@ -25,6 +25,10 @@ class Loss_vit(torch.nn.Module):
 
         self.cfg = cfg
         self.extractor = VitExtractor(model_name=cfg['dino_model_name'], device=device)
+        for p in self.extractor.model.parameters():
+            p.requires_grad_(False)
+
+        self.extractor.model.eval()
         
         imagenet_norm = transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
         global_resize_transform = Resize(cfg['dino_global_patch_size'], max_size=480)
@@ -84,16 +88,24 @@ class Loss_vit(torch.nn.Module):
             keys_ssim = self.extractor.get_keys_self_sim_from_input(b.unsqueeze(0), layer_num=11)
             loss += F.mse_loss(keys_ssim, target_keys_self_sim)
         return loss
-    
-    def calculate_dir_cls_loss(self, outputs,out_prev):
+        
+        
+    def calculate_dir_cls_loss(self, outputs, out_prev):
+
         loss = 0.0
-        for a, b  in zip(outputs, out_prev):  # avoid memory limitations
+
+        for a, b in zip(outputs, out_prev):
+
             a = self.global_transform(a).unsqueeze(0).to(device)
             b = self.global_transform(b).unsqueeze(0).to(device)
+
             cls_token = self.extractor.get_feature_from_input(a)[-1][0, 0, :]
+
             with torch.no_grad():
                 prev_cls_token = self.extractor.get_feature_from_input(b)[-1][0, 0, :]
-            loss -= F.mse_loss(prev_cls_token , cls_token)
+
+            loss -= F.mse_loss(prev_cls_token, cls_token)
+
         return loss
     
     def calculate_target_loss(self, outputs,target):
